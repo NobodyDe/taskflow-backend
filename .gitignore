@@ -1,0 +1,72 @@
+# ==============================
+# Dependências
+# ==============================
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+
+# ==============================
+# Build / Compilação
+# ==============================
+dist/
+build/
+*.js.map
+*.d.ts
+
+# ==============================
+# Variáveis de Ambiente (CRÍTICO)
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Docker
+# ==============================
+docker-compose.yml
+docker-compose.override.yml
+docker-compose.*.yml
+
+# ==============================
+# Banco de Dados / Volumes
+# ==============================
+*.sql
+*.sqlite
+*.sqlite3
+pgdata/
+mysql_data/
+mongo_data/
+
+# ==============================
+# Logs
+# ==============================
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==============================
+# IDE / Editor
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Testes / Cobertura
+# ==============================
+coverage/
+.nyc_output/
+
+# ==============================
+# Sistema Operacional
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini

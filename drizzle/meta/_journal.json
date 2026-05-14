@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1778611559743,
+      "tag": "0000_eager_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778614260475,
+      "tag": "0001_puzzling_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778617593040,
+      "tag": "0002_watery_ikaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778618888967,
+      "tag": "0003_good_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1778619559439,
+      "tag": "0004_add_projects_owner_id",
+      "breakpoints": true
+    }
+  ]
+}
