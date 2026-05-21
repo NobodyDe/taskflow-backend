@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DrizzleService } from 'src/db/drizzle.provider';
-import { projects, projects_members, user } from 'src/db/schema';
+import { user } from 'src/db/schema';
 import { eq } from 'drizzle-orm';
 
 @Injectable()
@@ -19,11 +19,28 @@ export class UsersService {
   async findById(id: string) {
     const User = await this.drizzle.db.query.user.findFirst({
       where: eq(user.id, id),
-      with: {
-        projects_members: {
-          with: { projects: true },
-        },
-      },
+      // with: {
+      //   // 1º Nível: Relação de membros do projeto
+      //   projects_members: {
+      //     with: {
+      //       // 2º Nível: O projeto em si
+      //       projects: {
+      //         with: {
+      //           // 3º Nível: Colunas do projeto ordenadas por posição
+      //           columns: {
+      //             orderBy: (cols, { asc }) => [asc(cols.position)],
+      //             with: {
+      //               // 4º Nível: Cards das colunas ordenados por posição
+      //               cards: {
+      //                 orderBy: (c, { asc }) => [asc(c.position)],
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
     });
 
     if (!User) throw new NotFoundException('User not founded');
