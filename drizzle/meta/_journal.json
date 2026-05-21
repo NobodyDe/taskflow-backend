@@ -36,6 +36,20 @@
       "when": 1778619559439,
       "tag": "0004_add_projects_owner_id",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1779221098305,
+      "tag": "0005_lumpy_thunderbolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1779229702589,
+      "tag": "0006_lame_brother_voodoo",
+      "breakpoints": true
     }
   ]
 }

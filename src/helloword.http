@@ -1,1 +1,6 @@
-GET http://localhost:3000/users/10361744-b52e-42ae-b0a7-70456363f3ad
+#  GET http://localhost:3000/users/01KS15P0R34ZA1D66SP4697FQX
+
+# GET http://localhost:3000/projects?userId=01KS15P0R34ZA1D66SP4697FQX
+
+ GET http://localhost:3000/columns?projectId=01KS15P0R87JBBTFM4Q7FFEPD0
+ x-user-id: 01KS15P0R34ZA1D66SP4697FQX 
