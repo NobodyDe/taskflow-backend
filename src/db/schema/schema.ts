@@ -14,6 +14,8 @@ export const user = pgTable('users', {
 
   position: varchar({ length: 80 }).notNull(),
   color_hex: char({ length: 7 }).notNull(),
+  email: varchar({ length: 255 }).notNull().unique(),
+  password_hash: varchar({ length: 255 }).notNull(),
   created_at: timestamp('created_at', { mode: 'string' })
     .notNull()
     .defaultNow(),

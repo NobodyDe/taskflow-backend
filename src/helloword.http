@@ -1,6 +1,11 @@
 #  GET http://localhost:3000/users/01KS15P0R34ZA1D66SP4697FQX
 
-# GET http://localhost:3000/projects?userId=01KS15P0R34ZA1D66SP4697FQX
+POST http://localhost:3000/auth/check-email
+Content-Type: application/jsons
 
- GET http://localhost:3000/columns?projectId=01KS15P0R87JBBTFM4Q7FFEPD0
- x-user-id: 01KS15P0R34ZA1D66SP4697FQX 
+{ 
+ "email": "henrique@email.com" 
+}
+
+#  GET http://localhost:3000/columns?projectId=01KS5F1JVVRR2QZ5MY1RWJS1PN
+#  x-user-id: 01KS5F1JVQMMH98JDGRV2S4CV6
