@@ -11,6 +11,7 @@ export const projects = pgTable('projects', {
     .primaryKey()
     .$defaultFn(() => ulid()),
   name: varchar({ length: 120 }).notNull(),
+  description: varchar({ length: 120 }).notNull(),
   color_hex: char({ length: 7 }).notNull(),
   owner_id: text('owner_id')
     .references(() => user.id)

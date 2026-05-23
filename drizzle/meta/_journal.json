@@ -50,6 +50,13 @@
       "when": 1779229702589,
       "tag": "0006_lame_brother_voodoo",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1779373635002,
+      "tag": "0007_warm_paper_doll",
+      "breakpoints": true
     }
   ]
 }
