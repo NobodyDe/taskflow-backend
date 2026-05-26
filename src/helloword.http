@@ -4,7 +4,7 @@ POST http://localhost:3000/auth/check-email
 Content-Type: application/jsons
 
 { 
- "email": "henrique@email.com" 
+ "email": "henrique@email.com"
 }
 
 #  GET http://localhost:3000/columns?projectId=01KS5F1JVVRR2QZ5MY1RWJS1PN

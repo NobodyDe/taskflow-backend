@@ -14,7 +14,7 @@ const pool = new Pool({ connectionString: url });
 const db = drizzle(pool, { schema });
 
 async function main(): Promise<void> {
-  // ✅ Gera os hashes FORA da transaction (operação CPU-intensive)
+  // Gera os hashes FORA da transaction (operação CPU-intensive)
   const henriqueHash = await bcrypt.hash('senha123', 10);
   const mariaHash = await bcrypt.hash('senha456', 10);
 
