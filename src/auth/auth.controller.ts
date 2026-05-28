@@ -7,13 +7,15 @@ import {
   Param,
   Delete,
   Res,
+  HttpException,
+  HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CheckEmaildto } from './dto/check-email.dto';
 import { LoginDto } from './dto/loginDto.dto';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +28,14 @@ export class AuthController {
 
   @Post('check-email')
   async checkEmail(@Body() dto: CheckEmaildto) {
-    return this.authService.checkEmail(dto.email);
+    try {
+      return this.authService.checkEmail(dto.email);
+    } catch (error: unknown) {
+      return new HttpException(
+        (error as HttpException).message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   @Post('login')
@@ -46,9 +55,28 @@ export class AuthController {
     return { access_token };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
+  @Post('refresh')
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies['refresh_token'] as string;
+
+    if (!refreshToken) {
+      throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
+    }
+
+    const { access_token, refresh_token } =
+      await this.authService.refreshToken(refreshToken);
+
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      path: '/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return { access_token };
   }
 
   @Delete(':id')

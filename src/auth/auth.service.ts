@@ -8,6 +8,16 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/loginDto.dto';
 import { JwtService } from '@nestjs/jwt';
 
+type AuthPayload = {
+  sub: string;
+  email: string;
+};
+
+type AuthTokens = {
+  access_token: string;
+  refresh_token: string;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -20,12 +30,12 @@ export class AuthService {
   }
 
   async checkEmail(email: string) {
-    const existUser = await this.drizzle.db.query.user.findFirst({
+    const userEmailExist = await this.drizzle.db.query.user.findFirst({
       where: eq(user.email, email),
       columns: { id: true },
     });
 
-    return { exists: !!existUser };
+    return { userEmailExist: !!userEmailExist };
   }
 
   async singIn(
@@ -55,14 +65,43 @@ export class AuthService {
     });
 
     const refresh_token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '7d',
     });
 
     return { access_token, refresh_token };
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
+  async refreshToken(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify<AuthPayload>(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+
+      const foundedUser = await this.drizzle.db.query.user.findFirst({
+        where: eq(user.id, payload.sub),
+      });
+
+      if (!foundedUser) {
+        throw new UnauthorizedException();
+      }
+      const NewPayload = { sub: foundedUser.id, email: foundedUser.email };
+
+      const access_token = this.jwtService.sign(NewPayload, {
+        expiresIn: '15m',
+      });
+
+      const refresh_token = this.jwtService.sign(NewPayload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '7d',
+      });
+
+      return { access_token, refresh_token };
+    } catch {
+      throw new UnauthorizedException(
+        'token de atualização inválido ou expirado',
+      );
+    }
   }
 
   remove(id: number) {
