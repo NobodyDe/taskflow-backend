@@ -1,6 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { DrizzleService } from 'src/db/drizzle.provider';
 import { user } from 'src/db/schema';
 import { eq } from 'drizzle-orm';
@@ -25,8 +28,34 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  async createAccount(dto: CreateAuthDto): Promise<AuthTokens> {
+    const existingUser = await this.drizzle.db.query.user.findFirst({
+      where: eq(user.email, dto.email),
+      columns: { id: true },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('E-mail já está em uso');
+    }
+
+    const password_hash = await bcrypt.hash(dto.password, 10);
+
+    const [createdUser] = await this.drizzle.db
+      .insert(user)
+      .values({
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+        initials: dto.initials,
+        position: dto.position,
+        color_hex: dto.color_hex,
+        email: dto.email,
+        password_hash,
+      })
+      .returning({ id: user.id, email: user.email });
+
+    const payload = { sub: createdUser.id, email: createdUser.email };
+
+    return this.generateTokens(payload);
   }
 
   async checkEmail(email: string) {
@@ -60,16 +89,16 @@ export class AuthService {
 
     const payload = { sub: foundedUser.id, email: foundedUser.email };
 
-    const access_token = this.jwtService.sign(payload, {
-      expiresIn: '15m',
-    });
+    // const access_token = this.jwtService.sign(payload, {
+    //   expiresIn: '15m',
+    // });
 
-    const refresh_token = this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '7d',
-    });
+    // const refresh_token = this.jwtService.sign(payload, {
+    //   secret: process.env.JWT_REFRESH_SECRET,
+    //   expiresIn: '7d',
+    // });
 
-    return { access_token, refresh_token };
+    return this.generateTokens(payload);
   }
 
   async refreshToken(refreshToken: string) {
@@ -102,6 +131,18 @@ export class AuthService {
         'token de atualização inválido ou expirado',
       );
     }
+  }
+
+  private generateTokens(payload: AuthPayload): AuthTokens {
+    return {
+      access_token: this.jwtService.sign(payload, {
+        expiresIn: '15m',
+      }),
+      refresh_token: this.jwtService.sign(payload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '7d',
+      }),
+    };
   }
 
   remove(id: number) {
