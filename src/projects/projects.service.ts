@@ -22,12 +22,8 @@ export class ProjectsService {
     return memberships.map((m) => m.projects);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
-  }
-
   update(userId: string) {
-    return 
+    return;
   }
 
   remove(id: number) {

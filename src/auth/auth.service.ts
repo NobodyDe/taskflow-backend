@@ -86,8 +86,11 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    const { password_hash, created_at, updated_at, id, ...userDetais } =
+      foundedUser;
 
-    const payload = { sub: foundedUser.id, email: foundedUser.email };
+    const payload = { sub: foundedUser.id, ...userDetais };
 
     // const access_token = this.jwtService.sign(payload, {
     //   expiresIn: '15m',
@@ -114,18 +117,13 @@ export class AuthService {
       if (!foundedUser) {
         throw new UnauthorizedException();
       }
-      const NewPayload = { sub: foundedUser.id, email: foundedUser.email };
 
-      const access_token = this.jwtService.sign(NewPayload, {
-        expiresIn: '15m',
-      });
+      const { password_hash, created_at, updated_at, id, ...userDetais } =
+        foundedUser;
 
-      const refresh_token = this.jwtService.sign(NewPayload, {
-        secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: '7d',
-      });
+      const newPayload = { sub: foundedUser.id, ...userDetais };
 
-      return { access_token, refresh_token };
+      return this.generateTokens(newPayload);
     } catch {
       throw new UnauthorizedException(
         'token de atualização inválido ou expirado',

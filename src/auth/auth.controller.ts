@@ -29,15 +29,20 @@ export class AuthController {
     const { access_token, refresh_token } =
       await this.authService.createAccount(dto);
 
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
-      path: '/auth',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    return { access_token };
+    res
+      .cookie('refresh_token', refresh_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .cookie('access_token', access_token, {
+        secure: false,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
   }
 
   @Post('check-email')
@@ -59,14 +64,20 @@ export class AuthController {
   ) {
     const { access_token, refresh_token } = await this.authService.singIn(dto);
 
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
-      path: '/auth',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    return { access_token };
+    res
+      .cookie('refresh_token', refresh_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .cookie('access_token', access_token, {
+        secure: false,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
   }
 
   @Post('refresh')
@@ -83,14 +94,20 @@ export class AuthController {
     const { access_token, refresh_token } =
       await this.authService.refreshToken(refreshToken);
 
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
-      path: '/auth',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    return { access_token };
+    res
+      .cookie('refresh_token', refresh_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .cookie('access_token', access_token, {
+        secure: false,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
   }
 
   @Delete(':id')

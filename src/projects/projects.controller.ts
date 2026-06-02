@@ -3,14 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
-  Query,
+  UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CurrentUserDto } from 'src/users/dto/create-user.dto';
+import { CurrentUser } from 'src/auth/current-user.decorator';
 
 @Controller('projects')
 export class ProjectsController {
@@ -21,19 +23,17 @@ export class ProjectsController {
     return this.projectsService.create(createProjectDto);
   }
 
-  // get /projects?userId=xxx
   @Get()
-  findAll(@Query('userId') userId: string) {
-    return this.projectsService.findAllByUser(userId);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(+id);
+  @UseGuards(JwtAuthGuard)
+  findAll(@CurrentUser() user: CurrentUserDto) {
+    return this.projectsService.findAllByUser(user.userId);
   }
 
   // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+  // update(
+  //   @CurrentUser() user: CurrentUserDto,
+  //   @Body() updateProjectDto: UpdateProjectDto,
+  // ) {
   //   return this.projectsService.update();
   // }
 
