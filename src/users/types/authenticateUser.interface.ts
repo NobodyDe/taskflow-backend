@@ -1,4 +1,4 @@
 export interface AuthenticatedUser {
-  user: string;
+  userId: string;
   email: string;
 }

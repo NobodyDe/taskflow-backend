@@ -8,11 +8,13 @@ import {
   Delete,
   Headers,
   Query,
-  BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { ColumnsService } from './columns.service';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ProjectMemberGuard } from 'src/projects/guards/project-member.guard';
 
 @Controller('columns')
 export class ColumnsController {
@@ -24,19 +26,9 @@ export class ColumnsController {
   }
   // GET /columns?projectId=xxx
   @Get()
-  findAll(
-    @Query('projectId') projectId: string,
-    @Headers('x-user-id') userId: string,
-  ) {
-    if (!projectId) {
-      throw new BadRequestException(
-        'O parametro projectId é obrigatorio na query string.',
-      );
-    }
-    if (!userId) {
-      throw new BadRequestException('O header x-user-id é obrigatorio.');
-    }
-    return this.columnsService.findAllByProject(projectId, userId);
+  @UseGuards(JwtAuthGuard, ProjectMemberGuard)
+  findAll(@Query('projectId') projectId: string) {
+    return this.columnsService.findAllByProject(projectId);
   }
 
   @Get(':id')

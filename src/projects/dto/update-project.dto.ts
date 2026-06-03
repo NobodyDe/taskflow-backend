@@ -1,4 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateProjectDto } from './create-project.dto';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+export class UpdateProjectDto {
+  @IsNotEmpty()
+  @IsString()
+  projectId: string;
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  name?: string;
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  description?: string;
+  @IsOptional()
+  @IsString()
+  @MaxLength(7)
+  color_hex?: string;
+}
