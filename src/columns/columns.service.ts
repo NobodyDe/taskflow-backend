@@ -14,10 +14,12 @@ export class ColumnsService {
   }
 
   async findAllByProject(projectId) {
-    return await this.drizzle.db.query.columns.findMany({
+    const columnsByProject = await this.drizzle.db.query.columns.findMany({
       where: eq(columns.projects_id, projectId),
       orderBy: [asc(columns.position)],
     });
+
+    return columnsByProject;
   }
 
   findOne(id: number) {
