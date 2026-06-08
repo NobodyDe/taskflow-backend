@@ -29,7 +29,6 @@ export class ProjectMemberGuard implements CanActivate {
     });
 
     if (isOwner) return true;
-
     const isMember = await this.drizzle.db.query.projects_members.findFirst({
       where: and(
         eq(projects_members.projects_id, projectId), // nesse projeto
